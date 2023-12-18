@@ -1,0 +1,4 @@
+﻿  lab19.c
+D:\Studying ULSTU\1 курс\ОАиП\Мои Лабы\lab19\lab19\lab19.c(169,12): warning C4244: =: преобразование "int" в "float", возможна потеря данных
+D:\Studying ULSTU\1 курс\ОАиП\Мои Лабы\lab19\lab19\lab19.c(165,16): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
+  lab19.vcxproj -> D:\Studying ULSTU\1 курс\ОАиП\Мои Лабы\lab19\x64\Debug\lab19.exe
