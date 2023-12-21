@@ -1,0 +1,4 @@
+﻿  lab23.c
+D:\Studying ULSTU\1 курс\ОАиП\Мои Лабы\lab23\lab23\lab23.c(117,6): warning C4013: isalpha_my: нет определения; предполагается "extern" с возвратом типа "int"
+D:\Studying ULSTU\1 курс\ОАиП\Мои Лабы\lab23\lab23\lab23.c(170,6): warning C4101: res: неиспользованная локальная переменная
+  lab23.vcxproj -> D:\Studying ULSTU\1 курс\ОАиП\Мои Лабы\lab23\x64\Debug\lab23.exe

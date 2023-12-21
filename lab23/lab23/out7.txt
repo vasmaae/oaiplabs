@@ -1,0 +1,596 @@
+#DEFINE _CRT_SECURE_NO_WARNINGS
+
+
+
+#INCLUDE <STDIO.H>
+
+#INCLUDE <WINDOWS.H>
+
+#INCLUDE <CTYPE.H>
+
+
+
+#DEFINE MAX_LEN 80
+
+CHAR S[MAX_LEN];
+
+
+
+INT GETNEXTDELIM(FILE* FP, CHAR TOKEN[]);
+
+INT GETNEXTWORD(FILE* FP, CHAR TOKEN[], INT MAXLEN);
+
+CHAR FILENAME[] = "TEXT4.TXT";
+
+
+
+CHAR FILENAMEIN[] = "TEXT5.TXT";
+
+CHAR FILENAMEHTML[] = "TEXT5_OUT.HTML";
+
+
+
+
+
+VOID ZAD1() {
+
+	FILE* FIN = FOPEN("TEXT1.TXT", "RT");
+
+	IF (FIN == NULL) {
+
+		PRINTF("Входной файл не найден");
+
+		RETURN;
+
+	}
+
+
+
+	FILE* FOUT;
+
+	FOUT = FOPEN("OUT1.TXT", "WT");
+
+	IF (FOUT == NULL) {
+
+		PRINTF("Выходной файл не создался");
+
+		RETURN;
+
+	}
+
+
+
+	WHILE (!FEOF(FIN)) {
+
+		IF (FGETS(S, MAX_LEN - 1, FIN) != NULL) {
+
+			FOR (INT I = 0; S[I] != '\0'; I++) {
+
+				IF (S[I] == '\T') 
+
+					S[I] = '%'; 
+
+			}
+
+			FPRINTF(FOUT, "%S", S);
+
+			PRINTF(">>%S<<\N", S);
+
+		}
+
+	}
+
+	FCLOSE(FIN);
+
+	FCLOSE(FOUT);
+
+}
+
+
+
+VOID ZAD2() {
+
+	FILE* FIN = FOPEN("TEXT2.TXT", "RT");
+
+	IF (FIN == NULL) {
+
+		PRINTF("Входной файл не найден");
+
+		RETURN;
+
+	}
+
+
+
+	FILE* FOUT;
+
+	FOUT = FOPEN("OUT2.TXT", "WT");
+
+	IF (FOUT == NULL) {
+
+		PRINTF("Выходной файл не создался");
+
+		RETURN;
+
+	}
+
+
+
+	WHILE (!FEOF(FIN)) {
+
+		IF (FGETS(S, MAX_LEN - 1, FIN) != NULL) {
+
+			FOR (INT I = 0; S[I] != '\0'; I++)
+
+				S[I] = TOUPPER(S[I]);
+
+			FPRINTF(FOUT, "%S", S);
+
+			PRINTF(">>%S<<\N", S);
+
+		}
+
+	}
+
+	FCLOSE(FIN);
+
+	FCLOSE(FOUT);
+
+}
+
+
+
+VOID ZAD3() {
+
+	FILE* FIN = FOPEN("TEXT3.TXT", "RT");
+
+	IF (FIN == NULL) {
+
+		PRINTF("Входной файл не найден");
+
+		RETURN;
+
+	}
+
+
+
+	FILE* FOUT;
+
+	FOUT = FOPEN("OUT3.TXT", "WT");
+
+	IF (FOUT == NULL) {
+
+		PRINTF("Выходной файл не создался");
+
+		RETURN;
+
+	}
+
+
+
+	INT K = 0;
+
+	WHILE (!FEOF(FIN)) {
+
+		IF (FGETS(S, MAX_LEN - 1, FIN) != NULL) {
+
+			FOR (INT I = 0; S[I] != '\0'; I++) {
+
+				IF (ISALPHA(S[I])) {
+
+					K = 1;
+
+					BREAK;
+
+				}
+
+			}
+
+			IF (K) {
+
+				FOR (INT I = 0; S[I] != '\0'; I++) {
+
+					IF (S[I] == '\N') {
+
+						S[I] = '#';
+
+					}
+
+				}
+
+			}
+
+			FPRINTF(FOUT, "%S\N", S);
+
+			PRINTF(">>%S<<\N", S);
+
+			K = 0;
+
+		}
+
+	}
+
+	FCLOSE(FIN);
+
+	FCLOSE(FOUT);
+
+}
+
+
+
+INT GETNEXTDELIM(FILE* FP, CHAR TOKEN[])
+
+{
+
+	INT CH = GETC(FP);
+
+	IF (CH == EOF) {
+
+		RETURN 0;
+
+	}
+
+	IF (ISALPHA_MY((UNSIGNED CHAR)CH)) {
+
+		UNGETC(CH, FP);
+
+		RETURN 0;
+
+	}
+
+	TOKEN[0] = (UNSIGNED CHAR)CH;
+
+	TOKEN[1] = '\0';
+
+		RETURN 1;
+
+}
+
+
+
+INT GETNEXTWORD(FILE* FP, CHAR TOKEN[], INT MAXLEN)
+
+{
+
+	INT I = 0;
+
+	INT CH;
+
+	WHILE (((CH = GETC(FP)) != EOF) && (I < MAXLEN - 1)) {
+
+		IF (!ISALPHA_MY((UNSIGNED CHAR)(CH))) {
+
+			BREAK;
+
+		}
+
+		TOKEN[I++] = CH;
+
+	}
+
+	UNGETC(CH, FP);
+
+	TOKEN[I] = '\0';
+
+		IF (I == 0)
+
+			RETURN 0;
+
+	RETURN 1;
+
+}
+
+
+
+INT ISALPHA_MY(UNSIGNED CHAR CH) {
+
+	IF (ISALPHA(CH))
+
+		RETURN 1;
+
+
+
+	IF (CH >= 192 && CH <= 223)
+
+		RETURN 1;
+
+	IF (CH >= 224 && CH <= 255)
+
+		RETURN 1;
+
+	/*
+
+		IF (CH >= 'А' && CH <= 'Я') RETURN 1;
+
+		IF (CH >= 'а' && CH <= 'п') RETURN 1;
+
+		IF (CH >= 'р' && CH <= 'я')RETURN 1;
+
+		IF (CH == 'ё' ) RETURN 1;
+
+		IF (CH == 'Ё') RETURN 1;*/
+
+
+
+	RETURN 0;
+
+}
+
+
+
+VOID ZAD4() {
+
+	PRINTF("BEGIN!!!\N");
+
+
+
+	FILE* FIN = FOPEN(FILENAME, "RT");
+
+	IF (FIN == NULL) {
+
+		PRINTF("FILE %S DOESN'T OPENED!\N", FILENAME);
+
+		RETURN;
+
+	}
+
+	CHAR TOKEN[MAX_LEN];
+
+	INT RES;
+
+
+
+	WHILE (!FEOF(FIN)) {
+
+		WHILE (GETNEXTDELIM(FIN, TOKEN)) {
+
+			PRINTF("<DELIM>%S</DELIM>\N", TOKEN);
+
+		}
+
+		IF (GETNEXTWORD(FIN, TOKEN, MAX_LEN)) {
+
+			PRINTF("<WORD>%S</WORD>\N", TOKEN);
+
+		}
+
+	}
+
+
+
+	FCLOSE(FIN);
+
+	PRINTF("END!!!\N");
+
+}
+
+
+
+VOID ZAD5() {
+
+	PRINTF("BEGIN!!!\N");
+
+
+
+	FILE* FIN = FOPEN(FILENAMEIN, "RT");
+
+	IF (FIN == NULL) {
+
+		PRINTF("FILE %S DOESN'T OPENED!\N", FILENAMEIN);
+
+		RETURN;
+
+	}
+
+
+
+	FILE* FOUT = FOPEN(FILENAMEHTML, "WT");
+
+	IF (FOUT == NULL) {
+
+		FCLOSE(FIN);
+
+		PRINTF("FILE %S DOESN'T OPENED!\N", FILENAMEHTML);
+
+		RETURN;
+
+	}
+
+	FPRINTF(FOUT, "<!DOCTYPE HTML>");
+
+	FPRINTF(FOUT, "<HTML>");
+
+	FPRINTF(FOUT, "<HEAD>");
+
+	FPRINTF(FOUT, "<META HTTP - EQUIV = \"CONTENT-TYPE\" CONTENT = 	\"TEXT/HTML; 
+CHARSET=UTF-8\" />");
+
+	FPRINTF(FOUT, "<TITLE>HTML DOCUMENT</TITLE>");
+
+	FPRINTF(FOUT, "</HEAD>");
+
+	FPRINTF(FOUT, "<BODY>");
+
+
+
+	INT CH;
+
+	WHILE ((CH = GETC(FIN)) != EOF) {
+
+		FPRINTF(FOUT, "%C", CH);
+
+
+
+		IF (CH == '\N')
+
+			FPRINTF(FOUT, "<BR>");
+
+	}
+
+
+
+	FPRINTF(FOUT, "</BODY>");
+
+	FPRINTF(FOUT, "</HTML>");
+
+	
+
+	FCLOSE(FIN);
+
+
+
+	FCLOSE(FOUT);
+
+	PRINTF("END!!!\N");
+
+
+
+}
+
+
+
+VOID ZAD6() {
+
+	FILE* FIN = FOPEN("TEXT6.TXT", "RT");
+
+	IF (FIN == NULL) {
+
+		PRINTF("Входной файл не найден");
+
+		RETURN;
+
+	}
+
+
+
+	FILE* FOUT;
+
+	FOUT = FOPEN("OUT6.TXT", "WT");
+
+	IF (FOUT == NULL) {
+
+		PRINTF("Выходной файл не создался");
+
+		RETURN;
+
+	}
+
+
+
+	INT K;
+
+	WHILE (!FEOF(FIN)) {
+
+		K = 0;
+
+		IF (FGETS(S, MAX_LEN - 1, FIN) != NULL) {
+
+			FOR (INT I = 0; S[I] != '\0'; I++) {
+
+				IF (S[I] == ';')
+
+					K += 1;
+
+			}
+
+			FOR (INT I = 0; S[I] != '\0'; I++) {
+
+				IF (S[I] == '\N')
+
+					S[I] = K;
+
+			}
+
+			FPRINTF(FOUT, "%S%D\N", S, K);
+
+		}
+
+	}
+
+
+
+	FCLOSE(FIN);
+
+	FCLOSE(FOUT);
+
+}
+
+
+
+VOID ZAD7_6() {
+
+
+
+}
+
+
+
+VOID MAIN() {
+
+	SETCONSOLECP(1251);
+
+	SETCONSOLEOUTPUTCP(1251);
+
+
+
+	INT ZAD = 1;
+
+	WHILE (ZAD != 0) {
+
+		PRINTF("Введите задачу (0 для выхода): ");
+
+		SCANF_S("%D", &ZAD);
+
+		SWITCH (ZAD) {
+
+		CASE 0:
+
+			BREAK;
+
+		CASE 1:
+
+			ZAD1();
+
+			BREAK;
+
+		CASE 2:
+
+			ZAD2();
+
+			BREAK;
+
+		CASE 3:
+
+			ZAD3();
+
+			BREAK;
+
+		CASE 4:
+
+			ZAD4();
+
+			BREAK;
+
+		CASE 5:
+
+			ZAD5();
+
+			BREAK;
+
+		CASE 6:
+
+			ZAD6();
+
+			BREAK;
+
+		CASE 7:
+
+			ZAD7();
+
+			BREAK;
+
+		}
+
+	}
+
+}

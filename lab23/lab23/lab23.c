@@ -1,0 +1,327 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <stdio.h>
+#include <Windows.h>
+#include <ctype.h>
+
+#define MAX_LEN 80
+char s[MAX_LEN];
+
+int getNextDelim(FILE* fp, char token[]);
+int getNextWord(FILE* fp, char token[], int maxLen);
+char filename[] = "text4.txt";
+
+char filenameIn[] = "text5.txt";
+char filenameHTML[] = "text5_out.html";
+
+
+void zad1() {
+	FILE* fin = fopen("text1.txt", "rt");
+	if (fin == NULL) {
+		printf("Входной файл не найден");
+		return;
+	}
+
+	FILE* fout;
+	fout = fopen("out1.txt", "wt");
+	if (fout == NULL) {
+		printf("Выходной файл не создался");
+		return;
+	}
+
+	while (!feof(fin)) {
+		if (fgets(s, MAX_LEN - 1, fin) != NULL) {
+			for (int i = 0; s[i] != '\0'; i++) {
+				if (s[i] == '\t') 
+					s[i] = '%'; 
+			}
+			fprintf(fout, "%s", s);
+			printf(">>%s<<\n", s);
+		}
+	}
+	fclose(fin);
+	fclose(fout);
+}
+
+void zad2() {
+	FILE* fin = fopen("text2.txt", "rt");
+	if (fin == NULL) {
+		printf("Входной файл не найден");
+		return;
+	}
+
+	FILE* fout;
+	fout = fopen("out2.txt", "wt");
+	if (fout == NULL) {
+		printf("Выходной файл не создался");
+		return;
+	}
+
+	while (!feof(fin)) {
+		if (fgets(s, MAX_LEN - 1, fin) != NULL) {
+			for (int i = 0; s[i] != '\0'; i++)
+				s[i] = toupper(s[i]);
+			fprintf(fout, "%s", s);
+			printf(">>%s<<\n", s);
+		}
+	}
+	fclose(fin);
+	fclose(fout);
+}
+
+void zad3() {
+	FILE* fin = fopen("text3.txt", "rt");
+	if (fin == NULL) {
+		printf("Входной файл не найден");
+		return;
+	}
+
+	FILE* fout;
+	fout = fopen("out3.txt", "wt");
+	if (fout == NULL) {
+		printf("Выходной файл не создался");
+		return;
+	}
+
+	int k = 0;
+	while (!feof(fin)) {
+		if (fgets(s, MAX_LEN - 1, fin) != NULL) {
+			for (int i = 0; s[i] != '\0'; i++) {
+				if (isalpha(s[i])) {
+					k = 1;
+					break;
+				}
+			}
+			if (k) {
+				for (int i = 0; s[i] != '\0'; i++) {
+					if (s[i] == '\n') {
+						s[i] = '#';
+					}
+				}
+			}
+			fprintf(fout, "%s\n", s);
+			printf(">>%s<<\n", s);
+			k = 0;
+		}
+	}
+	fclose(fin);
+	fclose(fout);
+}
+
+int getNextDelim(FILE* fp, char token[])
+{
+	int ch = getc(fp);
+	if (ch == EOF) {
+		return 0;
+	}
+	if (isalpha_my((unsigned char)ch)) {
+		ungetc(ch, fp);
+		return 0;
+	}
+	token[0] = (unsigned char)ch;
+	token[1] = '\0';
+		return 1;
+}
+
+int getNextWord(FILE* fp, char token[], int maxLen)
+{
+	int i = 0;
+	int ch;
+	while (((ch = getc(fp)) != EOF) && (i < maxLen - 1)) {
+		if (!isalpha_my((unsigned char)(ch))) {
+			break;
+		}
+		token[i++] = ch;
+	}
+	ungetc(ch, fp);
+	token[i] = '\0';
+		if (i == 0)
+			return 0;
+	return 1;
+}
+
+int isalpha_my(unsigned char ch) {
+	if (isalpha(ch))
+		return 1;
+
+	if (ch >= 192 && ch <= 223)
+		return 1;
+	if (ch >= 224 && ch <= 255)
+		return 1;
+	/*
+		if (ch >= 'А' && ch <= 'Я') return 1;
+		if (ch >= 'а' && ch <= 'п') return 1;
+		if (ch >= 'р' && ch <= 'я')return 1;
+		if (ch == 'ё' ) return 1;
+		if (ch == 'Ё') return 1;*/
+
+	return 0;
+}
+
+void zad4() {
+	printf("BEGIN!!!\n");
+
+	FILE* fin = fopen(filename, "rt");
+	if (fin == NULL) {
+		printf("File %s doesn't opened!\n", filename);
+		return;
+	}
+	char token[MAX_LEN];
+	int res;
+
+	while (!feof(fin)) {
+		while (getNextDelim(fin, token)) {
+			printf("<DELIM>%s</DELIM>\n", token);
+		}
+		if (getNextWord(fin, token, MAX_LEN)) {
+			printf("<WORD>%s</WORD>\n", token);
+		}
+	}
+
+	fclose(fin);
+	printf("END!!!\n");
+}
+
+void zad5() {
+	printf("BEGIN!!!\n");
+
+	FILE* fin = fopen(filenameIn, "rt");
+	if (fin == NULL) {
+		printf("File %s doesn't opened!\n", filenameIn);
+		return;
+	}
+
+	FILE* fout = fopen(filenameHTML, "wt");
+	if (fout == NULL) {
+		fclose(fin);
+		printf("File %s doesn't opened!\n", filenameHTML);
+		return;
+	}
+	fprintf(fout, "<!DOCTYPE html>");
+	fprintf(fout, "<html>");
+	fprintf(fout, "<head>");
+	fprintf(fout, "<meta http - equiv = \"Content-Type\" content = 	\"text/html; charset=utf-8\" />");
+	fprintf(fout, "<title>HTML Document</title>");
+	fprintf(fout, "</head>");
+	fprintf(fout, "<body>");
+
+	int ch;
+	while ((ch = getc(fin)) != EOF) {
+		fprintf(fout, "%c", ch);
+
+		if (ch == '\n')
+			fprintf(fout, "<br>");
+	}
+
+	fprintf(fout, "</body>");
+	fprintf(fout, "</html>");
+	
+	fclose(fin);
+
+	fclose(fout);
+	printf("END!!!\n");
+
+}
+
+void zad6() {
+	FILE* fin = fopen("text6.txt", "rt");
+	if (fin == NULL) {
+		printf("Входной файл не найден");
+		return;
+	}
+
+	FILE* fout;
+	fout = fopen("out6.txt", "wt");
+	if (fout == NULL) {
+		printf("Выходной файл не создался");
+		return;
+	}
+
+	int k;
+	while (!feof(fin)) {
+		k = 0;
+		if (fgets(s, MAX_LEN - 1, fin) != NULL) {
+			for (int i = 0; s[i] != '\0'; i++) {
+				if (s[i] == ';')
+					k += 1;
+			}
+			for (int i = 0; s[i] != '\0'; i++) {
+				if (s[i] == '\n')
+					s[i] = k;
+			}
+			fprintf(fout, "%s%d\n", s, k);
+		}
+	}
+
+	fclose(fin);
+	fclose(fout);
+}
+
+int myToupper(int c) {
+	int new_c = c;
+	if (c >= 'a' && c <= 'z')
+		new_c = 'A' + (c - 'a');
+	return new_c;
+}
+
+void zad7() {
+	FILE* fin = fopen("text7.txt", "rt");
+	if (fin == NULL) {
+		printf("Входной файл не найден");
+		return;
+	}
+
+	FILE* fout;
+	fout = fopen("out7.txt", "wt");
+	if (fout == NULL) {
+		printf("Выходной файл не создался");
+		return;
+	}
+
+	while (!feof(fin)) {
+		if (fgets(s, MAX_LEN - 1, fin) != NULL) {
+			for (int i = 0; s[i] != '\0'; i++)
+				s[i] = myToupper(s[i]);
+		}
+		fprintf(fout, "%s\n", s);
+	}
+
+	fclose(fin);
+	fclose(fout);
+}
+
+void main() {
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+
+	int zad = 1;
+	while (zad != 0) {
+		printf("Введите задачу (0 для выхода): ");
+		scanf_s("%d", &zad);
+		switch (zad) {
+		case 0:
+			break;
+		case 1:
+			zad1();
+			break;
+		case 2:
+			zad2();
+			break;
+		case 3:
+			zad3();
+			break;
+		case 4:
+			zad4();
+			break;
+		case 5:
+			zad5();
+			break;
+		case 6:
+			zad6();
+			break;
+		case 7:
+			zad7();
+			break;
+		}
+	}
+}

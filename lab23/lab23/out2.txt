@@ -1,0 +1,82 @@
+#DEFINE _CRT_SECURE_NO_WARNINGS
+
+#INCLUDE <STDIO.H>
+#INCLUDE <WINDOWS.H>
+#INCLUDE <CTYPE.H>
+
+#DEFINE MAX_LEN 80
+CHAR S[MAX_LEN];
+
+VOID ZAD1() {
+	FILE* FIN = FOPEN("TEXT1.TXT", "RT");
+	IF (FIN == NULL) {
+		PRINTF("Входной файл не найден");
+		RETURN;
+	}
+
+	FILE* FOUT;
+	FOUT = FOPEN("OUT1.TXT", "WT");
+	IF (FOUT == NULL) {
+		PRINTF("Выходной файл не создался");
+		RETURN;
+	}
+
+	WHILE (!FEOF(FIN)) {
+		IF (FGETS(S, MAX_LEN - 1, FIN) != NULL) {
+			FOR (INT I = 0; S[I] != '\0'; I++) {
+				IF (S[I] == '\T') 
+					S[I] = '%'; 
+			}
+			FPRINTF(FOUT, "%S", S);
+			PRINTF(">>%S<<\N", S);
+		}
+	}
+	FCLOSE(FIN);
+	FCLOSE(FOUT);
+}
+
+VOID ZAD2() {
+	FILE* FIN = FOPEN("TEXT1.TXT", "RT");
+	IF (FIN == NULL) {
+		PRINTF("Входной файл не найден");
+		RETURN;
+	}
+
+	FILE* FOUT;
+	FOUT = FOPEN("OUT1.TXT", "WT");
+	IF (FOUT == NULL) {
+		PRINTF("Выходной файл не создался");
+		RETURN;
+	}
+
+	WHILE (!FEOF(FIN)) {
+		IF (FGETS(S, MAX_LEN - 1, FIN) != NULL) {
+			FOR (INT I = 0; S[I] != '\0'; I++)
+				S[I] = TOUPPER(S[I]);
+			FPRINTF(FOUT, "%S", S);
+			PRINTF(">>%S<<\N", S);
+		}
+	}
+	FCLOSE(FIN);
+	FCLOSE(FOUT);
+}
+
+VOID MAIN() {
+	SETCONSOLECP(1251);
+	SETCONSOLEOUTPUTCP(1251);
+	INT ZAD = 1;
+	WHILE (ZAD != 0) {
+		PRINTF("Введите задачу (0 для выхода): ");
+		SCANF_S("%D", &ZAD);
+		SWITCH (ZAD) {
+		CASE 0:
+			BREAK;
+		CASE 1:
+			ZAD1();
+			BREAK;
+		CASE 2:
+			ZAD2();
+			BREAK;
+		}
+	}
+}
