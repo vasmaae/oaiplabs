@@ -208,7 +208,7 @@ void Down() {
 
 void Save() {
 	FILE* fout;
-	fout = fopen("C:\\Users\\Макс\\source\\repos\\laba21\\Save.txt", "wt");
+	fout = fopen("Save.txt", "wt");
 	fprintf(fout, "%d ", N);
 	fprintf(fout, "%d \n", M);
 
@@ -228,7 +228,7 @@ void Save() {
 
 void Load() {
 	FILE* fin;
-	fin = fopen("C:\\Users\\Макс\\source\\repos\\laba21\\Save.txt", "rt");
+	fin = fopen("Save.txt", "rt");
 
 	int n, m;
 	fscanf(fin, "%d", &n);
