@@ -1,0 +1,5 @@
+﻿  lab21.cpp
+D:\Studying ULSTU\1 курс\ОАиП\Мои Лабы\Новая папка\lab24zad8\lab21\lab21.cpp(89,55): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+D:\Studying ULSTU\1 курс\ОАиП\Мои Лабы\Новая папка\lab24zad8\lab21\lab21.cpp(245,15): warning C4477: "fprintf": в строке форматирования "%d" требуется аргумент типа "int", но вариативный аргумент "1" имеет тип "int *"
+D:\Studying ULSTU\1 курс\ОАиП\Мои Лабы\Новая папка\lab24zad8\lab21\lab21.cpp(245,15): warning C4313: fprintf: конфликт "%d" в строке формата с аргументом 1 типа "int *"
+  lab21.vcxproj -> D:\Studying ULSTU\1 курс\ОАиП\Мои Лабы\Новая папка\lab24zad8\x64\Debug\lab21.exe
